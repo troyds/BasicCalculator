@@ -1,0 +1,108 @@
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Data;
+using System.Drawing;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+
+namespace calculator
+{
+    public partial class frmCalculator : Form
+    {
+        double value = 0;
+        double operandOne = 0;
+        double operandTwo = 0;
+        int operatorCounter = 0;
+        int numberPressed = 0;
+        string operatorUse = "";
+        bool isOperatorUsed = false;
+        bool isAnotherOperator = false;
+
+        public frmCalculator()
+        {
+            InitializeComponent();
+        }
+
+        private void btnNumbersClick(object sender, EventArgs e)
+        {
+            if ((txtResult.Text == "0") || (isOperatorUsed))
+                txtResult.Clear();
+            isOperatorUsed = false;
+
+            Button numButton = (Button) sender;
+            txtResult.Text = txtResult.Text + numButton.Text;
+            numberPressed++;
+
+            if (numberPressed == 1)
+            {
+                value = Convert.ToDouble(txtResult.Text);
+            }
+            else if (numberPressed > 1)
+            {
+                operandTwo = Convert.ToDouble(txtResult.Text);
+            }
+            Calculate();
+        }
+
+        private void btnOperatorClick(object sender, EventArgs e)
+        {
+            Button operatorButton = (Button)sender;
+            operatorUse = operatorButton.Text;
+            isOperatorUsed = true;
+            operatorCounter++;
+
+            if (operatorCounter > 1) { 
+                isAnotherOperator = true;
+            }
+
+            txtEquationDisplay.Text = value.ToString() + " " + operatorUse;
+            txtResult.Text = value.ToString();
+        }
+
+        private void btnCalculate_Click(object sender, EventArgs e)
+        {
+            if (isAnotherOperator)
+            {
+                txtResult.Text = value.ToString();
+            } else {
+                Calculate();
+            }
+            txtResult.Text = value.ToString();
+            txtEquationDisplay.Text = operandOne.ToString() + " " + operatorUse + " " + operandTwo.ToString();
+        }
+
+        private void Calculate()
+        {
+            switch (operatorUse)
+            {
+                case "+":
+                    operandOne = value;
+                    value = value + operandTwo;
+                    break;
+                case "-":
+                    operandOne = value;
+                    value = value - operandTwo;
+                    break;
+                case "*":
+                    operandOne = value;
+                    value = value * operandTwo;
+                    break;
+                case "/":
+                    operandOne = value;
+                    value = value / operandTwo;
+                    break;
+                default:
+                    break;
+            } //end switch
+        }
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            txtResult.Text = "0";
+            txtEquationDisplay.Text = "";
+            value = 0;
+        }
+    }
+}
